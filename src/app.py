@@ -139,6 +139,9 @@ def get_user_favorites():
 @app.route('/favorite/planet/<int:planet_id>', methods=['POST'])
 def add_favorite_planet(planet_id):
     user_id = 1  # Placeholder para el ID del usuario actual
+    existente = Favorito_Planeta.query.filter_by(usuario_id=user_id, planeta_id=planet_id).first()
+    if existente:
+        return jsonify({"msg": "El planeta ya está en los favoritos"}), 400
     nuevo_favorito = Favorito_Planeta(usuario_id=user_id, planeta_id=planet_id)
     db.session.add(nuevo_favorito)
     db.session.commit()
@@ -147,18 +150,26 @@ def add_favorite_planet(planet_id):
 @app.route('/favorite/people/<int:people_id>', methods=['POST'])
 def add_favorite_person(people_id):
     user_id = 1  # Placeholder para el ID del usuario actual
+    existente = Favorito_Personaje.query.filter_by(usuario_id=user_id, personaje_id=people_id).first()
+    if existente:
+        return jsonify({"msg": "El personaje ya está en los favoritos"}), 400
     nuevo_favorito = Favorito_Personaje(usuario_id=user_id, personaje_id=people_id)
     db.session.add(nuevo_favorito)
     db.session.commit()
     return jsonify(nuevo_favorito.serialize()), 201
 
+
 @app.route('/favorite/vehicle/<int:vehicle_id>', methods=['POST'])
 def add_favorite_vehicle(vehicle_id):
     user_id = 1  # Placeholder para el ID del usuario actual
+    existente = Favorito_Vehiculo.query.filter_by(usuario_id=user_id, vehiculo_id=vehicle_id).first()
+    if existente:
+        return jsonify({"msg": "El vehículo ya está en los favoritos"}), 400
     nuevo_favorito = Favorito_Vehiculo(usuario_id=user_id, vehiculo_id=vehicle_id)
     db.session.add(nuevo_favorito)
     db.session.commit()
     return jsonify(nuevo_favorito.serialize()), 201
+
 
 @app.route('/favorite/planet/<int:planet_id>', methods=['DELETE'])
 def delete_favorite_planet(planet_id):
